@@ -1,0 +1,137 @@
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("/assets/fonts/PlusJakartaSans.woff2") format("woff2");
+  font-weight: 300 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Figtree";
+  src: url("/assets/fonts/Figtree.woff2") format("woff2");
+  font-weight: 300 900;
+  font-display: swap;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0.98 0.002 250;
+    --foreground: 0.18 0.02 255;
+    --card: 1 0 0;
+    --card-foreground: 0.18 0.02 255;
+    --popover: 1 0 0;
+    --popover-foreground: 0.18 0.02 255;
+    --primary: 0.57 0.2 255;
+    --primary-foreground: 1 0 0;
+    --secondary: 0.94 0.01 250;
+    --secondary-foreground: 0.35 0.05 255;
+    --muted: 0.94 0.01 250;
+    --muted-foreground: 0.55 0.03 255;
+    --accent: 0.93 0.03 250;
+    --accent-foreground: 0.35 0.05 255;
+    --destructive: 0.55 0.22 25;
+    --destructive-foreground: 1 0 0;
+    --border: 0.9 0.015 255;
+    --input: 0.9 0.015 255;
+    --ring: 0.57 0.2 255;
+    --radius: 0.75rem;
+    --chart-1: 0.57 0.2 255;
+    --chart-2: 0.7 0.15 200;
+    --chart-3: 0.65 0.18 170;
+    --chart-4: 0.75 0.15 80;
+    --chart-5: 0.6 0.2 30;
+    --sidebar: 0.96 0.005 250;
+    --sidebar-foreground: 0.18 0.02 255;
+    --sidebar-primary: 0.57 0.2 255;
+    --sidebar-primary-foreground: 1 0 0;
+    --sidebar-accent: 0.93 0.03 250;
+    --sidebar-accent-foreground: 0.35 0.05 255;
+    --sidebar-border: 0.9 0.015 255;
+    --sidebar-ring: 0.57 0.2 255;
+
+    /* Priority colors */
+    --priority-low: 0.55 0.02 250;
+    --priority-medium: 0.72 0.15 80;
+    --priority-high: 0.55 0.22 25;
+    --status-pending: 0.57 0.2 255;
+    --status-completed: 0.55 0.18 155;
+  }
+
+  .dark {
+    --background: 0.14 0.025 265;
+    --foreground: 0.93 0.01 250;
+    --card: 0.18 0.025 265;
+    --card-foreground: 0.93 0.01 250;
+    --popover: 0.18 0.025 265;
+    --popover-foreground: 0.93 0.01 250;
+    --primary: 0.62 0.22 255;
+    --primary-foreground: 0.1 0.01 265;
+    --secondary: 0.22 0.03 265;
+    --secondary-foreground: 0.85 0.01 250;
+    --muted: 0.22 0.03 265;
+    --muted-foreground: 0.6 0.03 255;
+    --accent: 0.24 0.04 265;
+    --accent-foreground: 0.85 0.01 250;
+    --destructive: 0.6 0.22 25;
+    --destructive-foreground: 1 0 0;
+    --border: 0.26 0.03 265;
+    --input: 0.26 0.03 265;
+    --ring: 0.62 0.22 255;
+    --chart-1: 0.62 0.22 255;
+    --chart-2: 0.72 0.15 200;
+    --chart-3: 0.65 0.18 170;
+    --chart-4: 0.78 0.15 80;
+    --chart-5: 0.65 0.2 30;
+    --sidebar: 0.16 0.025 265;
+    --sidebar-foreground: 0.93 0.01 250;
+    --sidebar-primary: 0.62 0.22 255;
+    --sidebar-primary-foreground: 0.1 0.01 265;
+    --sidebar-accent: 0.24 0.04 265;
+    --sidebar-accent-foreground: 0.85 0.01 250;
+    --sidebar-border: 0.26 0.03 265;
+    --sidebar-ring: 0.62 0.22 255;
+
+    --priority-low: 0.6 0.03 250;
+    --priority-medium: 0.78 0.15 80;
+    --priority-high: 0.6 0.22 25;
+    --status-pending: 0.62 0.22 255;
+    --status-completed: 0.6 0.18 155;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-body;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer utilities {
+  .priority-low {
+    color: oklch(var(--priority-low));
+    background-color: oklch(var(--priority-low) / 0.12);
+  }
+  .priority-medium {
+    color: oklch(var(--priority-medium));
+    background-color: oklch(var(--priority-medium) / 0.12);
+  }
+  .priority-high {
+    color: oklch(var(--priority-high));
+    background-color: oklch(var(--priority-high) / 0.12);
+  }
+  .status-pending {
+    color: oklch(var(--status-pending));
+    border-color: oklch(var(--status-pending));
+  }
+  .status-completed {
+    color: white;
+    background-color: oklch(var(--status-completed));
+  }
+}

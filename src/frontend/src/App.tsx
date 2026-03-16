@@ -1,12 +1,22 @@
 import { Toaster } from "@/components/ui/sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, CheckCheck, Clock, Moon, Plus, Sun } from "lucide-react";
+import {
+  Calendar,
+  CheckCheck,
+  Clock,
+  LogOut,
+  Moon,
+  Plus,
+  Sun,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import type { Task } from "./backend.d";
 import { DeleteConfirmModal } from "./components/DeleteConfirmModal";
+import { LoginPage } from "./components/LoginPage";
 import { TaskCard } from "./components/TaskCard";
 import { TaskModal } from "./components/TaskModal";
+import { useAuth } from "./hooks/useAuth";
 import { useNotificationScheduler } from "./hooks/useNotifications";
 import {
   useCreateTask,
@@ -26,22 +36,39 @@ function generateId() {
 
 export default function App() {
   const { theme, toggle: toggleTheme } = useTheme();
+  const { currentUser, logout } = useAuth();
   const [modalOpen, setModalOpen] = useState(false);
   const [editTask, setEditTask] = useState<Task | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [notifPermission, setNotifPermission] =
+    useState<NotificationPermission>(
+      "Notification" in window ? Notification.permission : "denied",
+    );
 
   const { data: tasks, isLoading } = useGetAllTasks();
   const createTask = useCreateTask();
   const updateTask = useUpdateTask();
   const deleteTask = useDeleteTask();
 
-  useNotificationScheduler(tasks);
+  useNotificationScheduler(tasks, notifPermission);
 
   useEffect(() => {
     if ("Notification" in window && Notification.permission === "default") {
-      Notification.requestPermission();
+      Notification.requestPermission().then((perm) => {
+        setNotifPermission(perm);
+      });
     }
   }, []);
+
+  // Show login page if not authenticated
+  if (!currentUser) {
+    return (
+      <>
+        <LoginPage onAuth={() => {}} />
+        <Toaster position="top-center" richColors />
+      </>
+    );
+  }
 
   const today = getToday();
   const todayTasks = (tasks || []).filter(
@@ -131,19 +158,33 @@ export default function App() {
               Smart To-Do
             </h1>
           </div>
-          <button
-            type="button"
-            data-ocid="header.toggle"
-            onClick={toggleTheme}
-            className="p-2 rounded-xl hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
-            aria-label="Toggle dark mode"
-          >
-            {theme === "dark" ? (
-              <Sun className="h-[18px] w-[18px]" />
-            ) : (
-              <Moon className="h-[18px] w-[18px]" />
-            )}
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              data-ocid="header.toggle"
+              onClick={toggleTheme}
+              className="p-2 rounded-xl hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Toggle dark mode"
+            >
+              {theme === "dark" ? (
+                <Sun className="h-[18px] w-[18px]" />
+              ) : (
+                <Moon className="h-[18px] w-[18px]" />
+              )}
+            </button>
+            <button
+              type="button"
+              data-ocid="header.logout_button"
+              onClick={() => {
+                logout();
+                toast.success("Logged out.");
+              }}
+              className="p-2 rounded-xl hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Logout"
+            >
+              <LogOut className="h-[18px] w-[18px]" />
+            </button>
+          </div>
         </header>
 
         {/* Main content */}
@@ -152,6 +193,9 @@ export default function App() {
             <h2 className="font-display font-bold text-2xl text-foreground">
               My Tasks
             </h2>
+            <p className="text-lg font-semibold text-primary">
+              Hi, {currentUser}!
+            </p>
             <p className="text-sm text-muted-foreground mt-0.5">
               {new Date().toLocaleDateString("en-US", {
                 weekday: "long",
